@@ -30,7 +30,7 @@ public:
 	sf::Font font;
 
 	Game(sf::RenderWindow & w);
-	void exit();
+	void cleanup();
 
 	void handleEvent(sf::Event e);
 	void run();

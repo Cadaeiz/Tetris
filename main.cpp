@@ -27,17 +27,6 @@ int main()
 
 	while (window.isOpen())
 	{
-		sf::Event e;
-		while (window.pollEvent(e))
-		{
-			switch(e.type)
-			{
-			case sf::Event::Closed:
-				window.close();
-			default:
-				game.handleEvent(e);
-			}
-		}
 		elapsed = clock.getElapsedTime();
 		/* wait 1/FPS seconds to rewrite to screen */
 		if (elapsed.asSeconds() >= PERIOD)
@@ -52,6 +41,20 @@ int main()
 			game.draw();
 			//window.draw(fps);
 			window.display();
+		}
+
+		sf::Event e;
+		while (window.pollEvent(e))
+		{
+			switch(e.type)
+			{
+			case sf::Event::Closed:
+				game.cleanup();
+				window.close();
+				break;
+			default:
+				game.handleEvent(e);
+			}
 		}
 	}
 

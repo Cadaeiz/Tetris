@@ -84,8 +84,6 @@ void Game::popState()
 {
 	delete stack[currentState];
 	stack[currentState--] = 0;
-	if (currentState == -1)
-		exit();
 }
 
 void Game::run()
@@ -147,6 +145,14 @@ void Game::draw()
 	/* call draw function of current state */
 	stack[currentState] -> draw(window); 
 }
-void Game::exit()
+
+void Game::cleanup()
 {
+	delete bgtiles;
+	delete nextBlock;
+	delete tileTexture;
+	delete backgroundTexture;
+	delete background;
+	while(currentState >= 0)
+		delete stack[currentState--];
 }
