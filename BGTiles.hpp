@@ -9,7 +9,7 @@
 #define BASEX 24
 #define BASEY 0
 
-
+struct Pos;
 struct Tile;
 
 class BGTiles
@@ -28,6 +28,7 @@ public:
 	void blink();
 	void draw(sf::RenderWindow & window);
 	bool isTile(int x, int y);
+	bool isTile(Pos p);
 	void reset();
 };
 

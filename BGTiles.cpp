@@ -43,10 +43,10 @@ void BGTiles::reset()
  */
 bool BGTiles::addTile(Tile t)
 {
-	if (!sprites[t.y][t.x])
+	if (!sprites[t.pos.y][t.pos.x])
 	{
-		sprites[t.y][t.x] = t.sprite;
-		rowSum[t.y]++;
+		sprites[t.pos.y][t.pos.x] = t.sprite;
+		rowSum[t.pos.y]++;
 		return true;
 	}
 	else
@@ -110,7 +110,7 @@ bool BGTiles::descend()
 				if (sprites[i][j])
 				{
 					/* move the tiles down one step */
-					sprites[i][j] -> move(sf::Vector2f(0,STEPSIZE));
+					sprites[i][j] -> move(0,STEPSIZE);
 
 					/* if a full square has passed, move tiles to next square */
 					if (!step)
@@ -151,7 +151,12 @@ void BGTiles::blink()
 
 bool BGTiles::isTile(int x, int y)
 {
-	return sprites[y][x];
+	return sprites[y][x] != 0;
+}
+
+bool BGTiles::isTile(Pos p)
+{
+	return sprites[p.y][p.x] != 0;
 }
 
 void BGTiles::draw(sf::RenderWindow & window)

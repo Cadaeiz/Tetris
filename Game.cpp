@@ -11,7 +11,7 @@ using namespace std;
 void setText(sf::Text & text, sf::Font & font, Pos pos, int CharSize = 0, const char * str = "", sf::Color color = sf::Color::White)
 {
 	text.setFont(font);
-	text.setPosition(pos.x,pos.y);
+	text.setPosition(float(pos.x),float(pos.y));
 	if (CharSize)
 		text.setCharacterSize(CharSize);
 	text.setString(str);
@@ -34,7 +34,7 @@ Game::Game(sf::RenderWindow & w)
 	bgtiles = new BGTiles();
 	currentBlock = 0;
 	reset = stateEnded = paused = false;
-	srand(time(NULL));
+	srand(unsigned int(time(NULL)));
 
 	nextBlock = new Block(bgtiles, tileTexture);
 	

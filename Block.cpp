@@ -5,7 +5,7 @@
  * texture contains the image representing each tile */
 Block::Block(BGTiles * bgt, sf::Texture * texture)
 {
-	bposx =  bposy = 0;
+	bpos = Pos();
 	step = 0;
 	currentRotation = 0;
 	bgtiles = bgt;
@@ -22,13 +22,8 @@ Block::Block(BGTiles * bgt, sf::Texture * texture)
 	case 0:
 		for (int i = 0; i < 4; i++)
 		{
-			/* horizontal rotations */
-			xRotations[0][i] = xRotations[2][i] = tiles[i].x = i;
-			yRotations[0][i] = yRotations[2][i] = tiles[i].y = 1;
-
-			/* vertical rotations */
-			xRotations[1][i] = xRotations[3][i] = 1;
-			yRotations[1][i] = yRotations[3][i] = i;
+			rotations[0][i] = rotations[2][i] = tiles[i].pos = Pos(i,1);
+			rotations[1][i] = rotations[3][i] = Pos(1,i);
 
 			tiles[i].sprite -> setColor(sf::Color::Red);
 		}
@@ -38,69 +33,52 @@ Block::Block(BGTiles * bgt, sf::Texture * texture)
 	case 1:
 		for (int i = 0; i < 4; i++)
 		{
-			xRotations[i][0] = tiles[0].x = 1;
-			yRotations[i][0] = tiles[0].y = 1;
-
-			xRotations[i][1] = tiles[1].x = 2;
-			yRotations[i][1] = tiles[1].y = 1;
-
-
-			xRotations[i][2] = tiles[2].x = 1;
-			yRotations[i][2] = tiles[2].y = 2;
-
-			xRotations[i][3] = tiles[3].x = 2;
-			yRotations[i][3] = tiles[3].y = 2;
+			rotations[i][0] = tiles[0].pos = Pos(1,1);
+			rotations[i][1] = tiles[1].pos = Pos(2,1);
+			rotations[i][2] = tiles[2].pos = Pos(1,2);
+			rotations[i][3] = tiles[3].pos = Pos(2,2);
 
 			tiles[i].sprite -> setColor(sf::Color::Yellow);
 		}
-		tiles[3].sprite -> setColor(sf::Color::Yellow);
 		break;
 	/* L1 block:		***
 	 *					*		*/
 	case 2:
 		for (int i = 0; i < 3; i++)
 		{
-			xRotations[0][i] = tiles[i].x = i+1;
-			yRotations[0][i] = tiles[i].y = 1;
-
-			xRotations[1][i] = 2; yRotations[1][i] = i+1;
-			xRotations[2][i] = i; yRotations[2][i] = 2;
-			xRotations[3][i] = 1; yRotations[3][i] = i;
+			rotations[0][i] = tiles[i].pos = Pos(i+1,1);
+			rotations[1][i] = Pos(2,i+1);
+			rotations[2][i] = Pos(i,2);
+			rotations[3][i] = Pos(1,i);
 
 			tiles[i].sprite -> setColor(sf::Color::Green);
 		}
 		tiles[3].sprite -> setColor(sf::Color::Green);
 
-		xRotations[0][3] = tiles[3].x = 1; 
-		yRotations[0][3] = tiles[3].y = 2;
-		
-		xRotations[1][3] = 1; yRotations[1][3] = 1;
-		xRotations[2][3] = 2; yRotations[2][3] = 1;
-		xRotations[3][3] = 2; yRotations[3][3] = 2;
-		
+		rotations[0][3] = tiles[3].pos = Pos(1,2);
+		rotations[1][3] = Pos(1,1);
+		rotations[2][3] = Pos(2,1);
+		rotations[3][3] = Pos(2,2);
+
 		break;
 	/* L2 block			***
 	 *					  *		*/
 	case 3:
 		for (int i = 0; i < 3; i++)
 		{
-			xRotations[0][i] = tiles[i].x = i;
-			yRotations[0][i] = tiles[i].y = 1;
-
-			xRotations[1][i] = 2;	yRotations[1][i] = i;
-			xRotations[2][i] = i+1; yRotations[2][i] = 2;
-			xRotations[3][i] = 1;	yRotations[3][i] = i+1;
+			rotations[0][i] = tiles[i].pos = Pos(i,1);
+			rotations[1][i] = Pos(2,i);
+			rotations[2][i] = Pos(i+1,2);
+			rotations[3][i] = Pos(1,i+1);
 
 			tiles[i].sprite -> setColor(sf::Color::Blue);
 		}
 		tiles[3].sprite -> setColor(sf::Color::Blue);
 
-		xRotations[0][3] = tiles[3].x = 2;
-		yRotations[0][3] = tiles[3].y = 2;
-
-		xRotations[1][3] = 1; yRotations[1][3] = 2;
-		xRotations[2][3] = 1; yRotations[2][3] = 1;
-		xRotations[3][3] = 2; yRotations[3][3] = 1;
+		rotations[0][3] = tiles[3].pos = Pos(2,2);
+		rotations[1][3] = Pos(1,2);
+		rotations[2][3] = Pos(1,1);
+		rotations[3][3] = Pos(2,1);
 
 		break;
 	/* S block			 **
@@ -108,51 +86,31 @@ Block::Block(BGTiles * bgt, sf::Texture * texture)
 	case 4:
 		for (int i = 0; i < 4; i++)
 		{
-			xRotations[i][0] = tiles[0].x = 0;
-			yRotations[i][0] = tiles[0].y = 2;
-
-			xRotations[i][1] = tiles[1].x = 1;
-			yRotations[i][1] = tiles[1].y = 2;
+			rotations[i][0] = tiles[0].pos = Pos(0,2);
+			rotations[i][1] = tiles[1].pos = Pos(1,2);
 
 			tiles[i].sprite -> setColor(sf::Color::Magenta);
 		}
-		xRotations[0][2] = xRotations[2][2] = tiles[2].x = 1; 
-		yRotations[0][2] = yRotations[2][2] = tiles[2].y = 1;
+		rotations[0][2] = rotations[2][2] = tiles[2].pos = Pos(1,1);
+		rotations[1][2] = rotations[3][2] = Pos(0,1);
+		rotations[0][3] = rotations[2][3] = tiles[3].pos = Pos(2,1);
+		rotations[1][3] = rotations[3][3] = Pos(1,3);
 
-		xRotations[1][2] = xRotations[3][2] = 0;
-		yRotations[1][2] = yRotations[3][2] = 1;
-		
-		xRotations[0][3] = xRotations[2][3] = tiles[3].x = 2; 
-		yRotations[0][3] = yRotations[2][3] = tiles[3].y = 1;
-
-		xRotations[1][3] = xRotations[3][3] = 1;
-		yRotations[1][3] = yRotations[3][3] = 3;
-		
 		break;
 	/* Z block			**
 	 *					 **		*/
 	case 5:
 		for (int i = 0; i < 4; i++)
 		{
-			xRotations[i][0] = tiles[0].x = 1;
-			yRotations[i][0] = tiles[0].y = 2;
-
-			xRotations[i][1] = tiles[1].x = 2;
-			yRotations[i][1] = tiles[1].y = 2;
+			rotations[i][0] = tiles[0].pos = Pos(1,2);
+			rotations[i][1] = tiles[1].pos = Pos(2,2);
 
 			tiles[i].sprite -> setColor(sf::Color::Cyan);
 		}
-		xRotations[0][2] = xRotations[2][2] = tiles[2].x = 0; 
-		yRotations[0][2] = yRotations[2][2] = tiles[2].y = 1;
-
-		xRotations[1][2] = xRotations[3][2] = 2;
-		yRotations[1][2] = yRotations[3][2] = 1;
-		
-		xRotations[0][3] = xRotations[2][3] = tiles[3].x = 1; 
-		yRotations[0][3] = yRotations[2][3] = tiles[3].y = 1;
-
-		xRotations[1][3] = xRotations[3][3] = 1;
-		yRotations[1][3] = yRotations[3][3] = 3;
+		rotations[0][2] = rotations[2][2] = tiles[2].pos = Pos(0,1);
+		rotations[1][2] = rotations[3][2] = Pos(2,1);
+		rotations[0][3] = rotations[2][3] = tiles[3].pos = Pos(1,1);
+		rotations[1][3] = rotations[3][3] = Pos(1,3);
 		
 		break;
 	/* T block			 *
@@ -160,22 +118,18 @@ Block::Block(BGTiles * bgt, sf::Texture * texture)
 	case 6:
 		for (int i = 0; i < 3; i++)
 		{
-			xRotations[0][i] = xRotations[2][i] = tiles[i].x = i;
-			yRotations[0][i] = yRotations[2][i] = tiles[i].y = 1;
-
-			xRotations[1][i] = xRotations[3][i] = 1;	
-			yRotations[1][i] = yRotations[3][i] = i;
+			rotations[0][i] = rotations[2][i] = tiles[i].pos = Pos(i,1);
+			rotations[1][i] = rotations[3][i] = Pos(1,i);
 
 			tiles[i].sprite -> setColor(sf::Color::White);
 		}
 		tiles[3].sprite -> setColor(sf::Color::White);
 
-		xRotations[0][3] = tiles[3].x = 1;
-		yRotations[0][3] = tiles[3].y = 2;
+		rotations[0][3] = tiles[3].pos = Pos(1,2);
+		rotations[1][3] = Pos(0,1);
+		rotations[2][3] = Pos(1,0);
+		rotations[3][3] = Pos(2,1);
 
-		xRotations[1][3] = 0; yRotations[1][3] = 1;
-		xRotations[2][3] = 1; yRotations[2][3] = 0;
-		xRotations[3][3] = 2; yRotations[3][3] = 1;
 		break;
 	}
 
@@ -188,11 +142,11 @@ bool Block::makeActive()
 {
 	bool success = true;
 	/* place at the top center of bgtiles */
-	bposx = NUMCOLS / 2 - 2;
-	bposy = 0;
+	bpos = Pos(NUMCOLS / 2 - 2, 0);
+
 	for (int i = 0; i < 4; i++)
 		/* if tile does not fit, delete it and move on */
-		if (bgtiles -> isTile(bposx+tiles[i].x,bposy+tiles[i].y))
+		if (bgtiles -> isTile(bpos+tiles[i].pos))
 		{
 			success = false;
 			delete tiles[i].sprite;
@@ -208,8 +162,7 @@ bool Block::makeActive()
 		for (int i = 0; i < 4; i++)
 			if (tiles[i].sprite)
 			{
-				tiles[i].x += bposx;
-				tiles[i].y += bposy;
+				tiles[i].pos += bpos;
 				bgtiles -> addTile(tiles[i]);
 			}
 
@@ -220,21 +173,19 @@ bool Block::makeActive()
  * returns true if block was able to move */
 bool Block::descend()
 {
-	int x, y;
+	Pos p;
 	/* if there is no room to move, place tiles
 	 * in the background and return false */
 	if (step == 0)
 		for (int i = 0; i < 4; i++)
 		{
-			x = bposx + tiles[i].x;
-			y = bposy + tiles[i].y;
+			p = bpos + tiles[i].pos;
 
-			if (y == NUMROWS - 1 || bgtiles -> isTile(x,y+1))
+			if (p.y == NUMROWS - 1 || bgtiles -> isTile(p+Pos(0,1)))
 			{
 				for (int j = 0; j < 4; j++)
 				{
-					tiles[j].x += bposx;
-					tiles[j].y += bposy;
+					tiles[j].pos += bpos;
 					bgtiles -> addTile(tiles[j]);
 				}
 				return false;
@@ -245,45 +196,42 @@ bool Block::descend()
 	if (++step == STEPS_PER_BLOCK)
 	{
 		step = 0;
-		bposy++;
+		bpos.y++;
 	}
 
 	for (int i = 0; i < 4; i++)
-		tiles[i].sprite -> move(sf::Vector2f(0,STEPSIZE));
+		tiles[i].sprite -> move(0,STEPSIZE);
 
 	return true;
 }
 
 bool Block::descendBlock()
 {
-	int x, y;
+	Pos p;
 	/* if there is no room to move, place tiles
 	 * in the background and return false */
 	for (int i = 0; i < 4; i++)
 	{
-		x = bposx + tiles[i].x;
-		y = bposy + tiles[i].y;
+		p = bpos + tiles[i].pos;
 
-		if (step == 0 && (y == NUMROWS - 1 || bgtiles -> isTile(x,y+1)))
+		if (step == 0 && (p.y == NUMROWS - 1 || bgtiles -> isTile(p+Pos(0,1))))
 		{
 			for (int j = 0; j < 4; j++)
 			{
-				tiles[j].x += bposx;
-				tiles[j].y += bposy;
+				tiles[j].pos += bpos;
 				bgtiles -> addTile(tiles[j]);
 			}
 			return false;
 		}
 		/* if there is a fraction of a tile left */
-		else if (step > 0 && (y >= NUMROWS - 2 || bgtiles -> isTile(x,y+2)))
+		else if (step > 0 && (p.y >= NUMROWS - 2 || bgtiles -> isTile(p+Pos(0,2))))
 		{
 			step = 0;
-			bposy++;
+			bpos.y++;
 			setPosition(BASEX, BASEY);
 			for (int j = 0; j < 4; j++)
 			{
-				tiles[j].x += bposx;
-				tiles[j].y += bposy;
+				tiles[j].pos += bpos;
 				bgtiles -> addTile(tiles[j]);
 			}
 			return false;
@@ -292,10 +240,10 @@ bool Block::descendBlock()
 	}
 
 	/* otherwise move each tile down by a whole square */
-	bposy++;
+	bpos.y++;
 
 	for (int i = 0; i < 4; i++)
-		tiles[i].sprite -> move(sf::Vector2f(0,TILESIZE));
+		tiles[i].sprite -> move(0,TILESIZE);
 
 	return true;
 }
@@ -304,50 +252,48 @@ bool Block::descendBlock()
 /* move all tiles one square to the left if possible */
 void Block::moveLeft()
 {
-	int x, y;
+	Pos p;
 	/* first check if there is room for all tiles one square to the left */
 	for (int i = 0; i < 4; i++)
 	{
 		/* find coordinates of space to the left of current position */
-		x = bposx + tiles[i].x - 1;
-		y = bposy + tiles[i].y;
+		p = bpos + tiles[i].pos + Pos(-1,0);
 
 		/* if the tile would move outside the background or on an existing tile */
-		if (x < 0 || 
-			bgtiles -> isTile(x,y) ||
-			(step > 0 && bgtiles -> isTile(x,y+1)))	//if descending, check next block down
+		if (p.x < 0 || 
+			bgtiles -> isTile(p) ||
+			(step > 0 && bgtiles -> isTile(p+Pos(0,1))))	//if descending, check next block down
 		{
 			return;
 		}
 	}
 
 	/* if possible, move all 4 tiles */
-	bposx--;
+	bpos.x--;
 	for (int i = 0; i < 4; i++)
-		tiles[i].sprite -> move(sf::Vector2f(-TILESIZE,0));
+		tiles[i].sprite -> move(-TILESIZE,0);
 }
 
 /* move all tiles one square to the right if possible */
 void Block::moveRight()
 {
-	int x, y;
+	Pos p;
 	/* first check if there is room for all tiles one square to the right */
 	for (int i = 0; i < 4; i++)
 	{
-		x = bposx + tiles[i].x + 1;
-		y = bposy + tiles[i].y;
+		p = bpos + tiles[i].pos + Pos(1,0);
 
-		if (x >= NUMCOLS ||
-			bgtiles -> isTile(x,y) ||
-			(step > 0 && bgtiles -> isTile(x,y+1)))
+		if (p.x >= NUMCOLS ||
+			bgtiles -> isTile(p) ||
+			(step > 0 && bgtiles -> isTile(p+Pos(0,1))))
 		{
 			return;
 		}
 	}
 	/* if possible, move all 4 tiles */
-	bposx++;
+	bpos.x++;
 	for (int i = 0; i < 4; i++)
-		tiles[i].sprite -> move(sf::Vector2f(TILESIZE,0));
+		tiles[i].sprite -> move(TILESIZE,0);
 }
 
 void Block::draw(sf::RenderWindow & window)
@@ -359,17 +305,16 @@ void Block::draw(sf::RenderWindow & window)
 
 void Block::rotate()
 {
-	int x, y;
+	Pos p;
 	/* first check if the blocks can be rotated */
 	for (int i = 0; i < 4; i++)
 	{
-		x = bposx + xRotations[(currentRotation + 1)%4][i];
-		y = bposy + yRotations[(currentRotation + 1)%4][i];
+		p = bpos + rotations[(currentRotation + 1)%4][i];
 		
-		if (x >= NUMCOLS || x < 0 ||
-			y >= NUMROWS || y < 0 ||
-			bgtiles -> isTile(x,y) ||
-			(step > 0 && bgtiles -> isTile(x,y+1)))
+		if (p.x >= NUMCOLS || p.x < 0 ||
+			p.y >= NUMROWS || p.y < 0 ||
+			bgtiles -> isTile(p) ||
+			(step > 0 && bgtiles -> isTile(p+Pos(0,1))))
 		{
 			return;
 		}
@@ -379,22 +324,18 @@ void Block::rotate()
 	if (++currentRotation >= 4)
 		currentRotation = 0;
 	for (int i = 0; i < 4; i++)
-	{
-		tiles[i].x = xRotations[currentRotation][i];
-		tiles[i].y = yRotations[currentRotation][i];
-	}
+		tiles[i].pos = rotations[currentRotation][i];
 
 	setPosition(BASEX, BASEY);
 }
 
 void Block::setPosition(int bx, int by)
 {
-	int x, y;
+	Pos p;
 	for (int i = 0; i < 4; i++)
 		if (tiles[i].sprite)
 		{
-			x = bx + (bposx + tiles[i].x)*TILESIZE;
-			y = by + (bposy + tiles[i].y)*TILESIZE + step * STEPSIZE;
-			tiles[i].sprite -> setPosition(x,y);
+			p = Pos(bx,by) + (bpos+tiles[i].pos)*TILESIZE + Pos(0,step*STEPSIZE);
+			tiles[i].sprite -> setPosition(float(p.x),float(p.y));
 		}
 }
